@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuida IA — Inteligencia artificial para residencias geriátricas</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --morado: #7C3AED;
+    --morado-claro: #A78BFA;
+    --morado-suave: #EDE9FE;
+    --morado-oscuro: #5B21B6;
+    --texto: #1E1B4B;
+    --gris: #6B7280;
+    --fondo: #FAFAF8;
+    --sombra: 0 4px 24px rgba(124,58,237,0.10);
+    --verde-wa: #25D366;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--fondo); color: var(--texto); line-height: 1.6; }
+  html { scroll-behavior: smooth; }
+
+  nav { position:fixed; top:0; width:100%; z-index:100; background:rgba(255,255,255,0.92); backdrop-filter:blur(10px); border-bottom:1px solid rgba(124,58,237,0.10); padding:14px 40px; display:flex; align-items:center; justify-content:space-between; }
+  .nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .nav-logo img { width:40px; height:40px; border-radius:8px; }
+  .nav-logo span { font-family:'Lora',serif; font-size:1.3rem; font-weight:700; color:var(--morado); }
+  .nav-links { display:flex; gap:32px; }
+  .nav-links a { color:var(--gris); text-decoration:none; font-size:0.9rem; font-weight:500; transition:color .2s; }
+  .nav-links a:hover { color:var(--morado); }
+  .nav-cta { background:var(--morado); color:#fff; border:none; padding:10px 22px; border-radius:50px; font-size:0.9rem; font-weight:600; cursor:pointer; transition:all .2s; text-decoration:none; }
+  .nav-cta:hover { background:var(--morado-oscuro); transform:translateY(-1px); }
+
+  .hero { min-height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; padding:120px 40px 80px; background:linear-gradient(160deg,#FAF5FF 0%,#F0F4FF 50%,#EDE9FE 100%); position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; top:-200px; right:-200px; width:600px; height:600px; background:radial-gradient(circle,rgba(167,139,250,0.15) 0%,transparent 70%); border-radius:50%; pointer-events:none; }
+  .hero-content { max-width:750px; position:relative; z-index:2; }
+  .hero-badge { display:inline-flex; align-items:center; gap:8px; background:var(--morado-suave); color:var(--morado); padding:8px 18px; border-radius:50px; font-size:0.85rem; font-weight:600; margin-bottom:28px; border:1px solid rgba(124,58,237,0.2); }
+  .hero img { width:100px; height:100px; margin-bottom:28px; border-radius:20px; box-shadow:0 12px 40px rgba(124,58,237,0.25); }
+  .hero h1 { font-family:'Lora',serif; font-size:clamp(2.2rem,5vw,3.4rem); font-weight:700; line-height:1.2; color:var(--texto); margin-bottom:24px; }
+  .hero h1 em { font-style:italic; color:var(--morado); }
+  .hero p { font-size:1.15rem; color:var(--gris); max-width:580px; margin:0 auto 40px; line-height:1.7; }
+  .hero-btns { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+  .btn-primary { background:var(--morado); color:#fff; padding:16px 36px; border-radius:50px; font-size:1rem; font-weight:600; cursor:pointer; border:none; transition:all .25s; box-shadow:0 6px 20px rgba(124,58,237,0.35); text-decoration:none; display:inline-block; }
+  .btn-primary:hover { background:var(--morado-oscuro); transform:translateY(-2px); }
+  .btn-secondary { background:#fff; color:var(--morado); padding:16px 36px; border-radius:50px; font-size:1rem; font-weight:600; cursor:pointer; border:2px solid var(--morado); transition:all .25s; text-decoration:none; display:inline-block; }
+  .btn-secondary:hover { background:var(--morado-suave); transform:translateY(-2px); }
+
+  .stats { display:flex; justify-content:center; gap:60px; padding:48px 40px; background:#fff; border-bottom:1px solid rgba(124,58,237,0.08); flex-wrap:wrap; }
+  .stat { text-align:center; }
+  .stat-num { font-family:'Lora',serif; font-size:2.4rem; font-weight:700; color:var(--morado); }
+  .stat-label { font-size:0.85rem; color:var(--gris); margin-top:4px; }
+
+  section { padding:90px 40px; }
+  .section-label { display:inline-flex; align-items:center; gap:6px; background:var(--morado-suave); color:var(--morado); padding:6px 14px; border-radius:50px; font-size:0.78rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:18px; }
+  .section-title { font-family:'Lora',serif; font-size:clamp(1.8rem,3vw,2.6rem); font-weight:700; line-height:1.25; margin-bottom:16px; }
+  .section-subtitle { font-size:1.05rem; color:var(--gris); max-width:540px; line-height:1.7; }
+  .text-center { text-align:center; }
+  .text-center .section-subtitle { margin:0 auto; }
+
+  .valor { background:#fff; }
+  .valor-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; max-width:1100px; margin:60px auto 0; }
+  .valor-card { padding:36px 32px; border-radius:20px; background:var(--fondo); border:1px solid rgba(124,58,237,0.08); transition:all .25s; }
+  .valor-card:hover { transform:translateY(-4px); box-shadow:var(--sombra); border-color:rgba(124,58,237,0.2); }
+  .valor-icon { font-size:2.2rem; margin-bottom:18px; }
+  .valor-card h3 { font-family:'Lora',serif; font-size:1.25rem; font-weight:700; margin-bottom:12px; }
+  .valor-card p { font-size:0.92rem; color:var(--gris); line-height:1.7; }
+
+  .agentes { background:var(--fondo); }
+  .agentes-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:24px; max-width:1200px; margin:60px auto 0; }
+  .agente-card { background:#fff; border-radius:18px; padding:28px; border:1px solid rgba(124,58,237,0.08); transition:all .25s; }
+  .agente-card:hover { transform:translateY(-3px); box-shadow:var(--sombra); border-color:rgba(124,58,237,0.2); }
+  .agente-card.disponible { border-left:4px solid var(--morado); }
+  .agente-card.pronto { border-left:4px solid #D1D5DB; }
+  .agente-badge { display:inline-flex; align-items:center; gap:5px; padding:4px 12px; border-radius:50px; font-size:0.72rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:16px; }
+  .badge-disponible { background:#D1FAE5; color:#065F46; }
+  .badge-pronto { background:#F3F4F6; color:#6B7280; }
+  .agente-card h3 { font-family:'Lora',serif; font-size:1.1rem; font-weight:700; margin-bottom:10px; }
+  .agente-card p { font-size:0.88rem; color:var(--gris); line-height:1.6; }
+  .agente-icon { font-size:1.8rem; margin-bottom:14px; }
+
+  .como { background:#fff; }
+  .pasos { max-width:900px; margin:60px auto 0; }
+  .paso { display:flex; gap:36px; align-items:flex-start; padding:36px; border-radius:20px; background:var(--fondo); margin-bottom:20px; border:1px solid rgba(124,58,237,0.08); transition:all .2s; }
+  .paso:hover { border-color:rgba(124,58,237,0.2); }
+  .paso-num { width:52px; height:52px; flex-shrink:0; border-radius:50%; background:var(--morado); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Lora',serif; font-size:1.3rem; font-weight:700; }
+  .paso-texto h3 { font-family:'Lora',serif; font-size:1.2rem; font-weight:700; margin-bottom:10px; }
+  .paso-texto p { font-size:0.92rem; color:var(--gris); line-height:1.7; }
+
+  .precios { background:var(--fondo); }
+  .precios-grid { display:grid; grid-template-columns:1fr 1fr; gap:32px; max-width:840px; margin:60px auto 0; }
+  .precio-card { background:#fff; border-radius:24px; padding:44px 40px; border:2px solid rgba(124,58,237,0.12); text-align:center; transition:all .25s; }
+  .precio-card.destacado { border-color:var(--morado); box-shadow:0 12px 40px rgba(124,58,237,0.20); position:relative; }
+  .precio-tag { position:absolute; top:-14px; left:50%; transform:translateX(-50%); background:var(--morado); color:#fff; padding:5px 20px; border-radius:50px; font-size:0.78rem; font-weight:700; white-space:nowrap; }
+  .precio-card:hover { transform:translateY(-4px); }
+  .precio-label { font-size:0.85rem; color:var(--gris); margin-bottom:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; }
+  .precio-num { font-family:'Lora',serif; font-size:3rem; font-weight:700; color:var(--texto); }
+  .precio-num span { font-size:1.2rem; color:var(--gris); font-family:'DM Sans',sans-serif; }
+  .precio-desc { font-size:0.88rem; color:var(--gris); margin:16px 0 24px; line-height:1.6; }
+  .precio-lista { list-style:none; text-align:left; margin-bottom:32px; }
+  .precio-lista li { display:flex; align-items:flex-start; gap:10px; font-size:0.88rem; margin-bottom:10px; }
+  .precio-lista li::before { content:'✓'; color:var(--morado); font-weight:700; flex-shrink:0; margin-top:1px; }
+
+  .datos { background:#fff; }
+  .datos-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; max-width:1100px; margin:60px auto 0; }
+  .dato-card { padding:32px; border-radius:18px; background:var(--morado-suave); border:1px solid rgba(124,58,237,0.12); }
+  .dato-card h3 { font-family:'Lora',serif; font-size:1.1rem; font-weight:700; margin:16px 0 10px; }
+  .dato-card p { font-size:0.88rem; color:var(--gris); line-height:1.6; }
+
+  /* SECCIÓN CONTACTO WHATSAPP */
+  .contacto-wa { background:linear-gradient(135deg,var(--morado) 0%,var(--morado-oscuro) 100%); }
+  .contacto-wa .section-title { color:#fff; }
+  .contacto-wa .section-subtitle { color:rgba(255,255,255,0.85); }
+  .contacto-wa .section-label { background:rgba(255,255,255,0.15); color:#fff; }
+  .wa-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; max-width:900px; margin:50px auto 0; }
+  .wa-card { background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.2); border-radius:20px; padding:32px; text-align:center; color:#fff; }
+  .wa-card-icon { font-size:2.5rem; margin-bottom:16px; }
+  .wa-card h3 { font-family:'Lora',serif; font-size:1.1rem; font-weight:700; margin-bottom:10px; }
+  .wa-card p { font-size:0.88rem; color:rgba(255,255,255,0.8); line-height:1.6; }
+  .wa-cta { text-align:center; margin-top:50px; }
+  .btn-whatsapp { display:inline-flex; align-items:center; gap:14px; background:var(--verde-wa); color:#fff; padding:20px 48px; border-radius:50px; font-size:1.1rem; font-weight:700; text-decoration:none; transition:all .25s; box-shadow:0 8px 30px rgba(37,211,102,0.4); }
+  .btn-whatsapp:hover { transform:translateY(-3px); box-shadow:0 12px 40px rgba(37,211,102,0.5); background:#20b858; }
+  .btn-whatsapp svg { width:28px; height:28px; fill:#fff; flex-shrink:0; }
+  .wa-nota { color:rgba(255,255,255,0.6); font-size:0.82rem; margin-top:18px; }
+
+  .contacto { background:var(--fondo); }
+  .contacto-grid { display:grid; grid-template-columns:1fr 1fr; gap:60px; max-width:1000px; margin:60px auto 0; align-items:start; }
+  .contacto-info h3 { font-family:'Lora',serif; font-size:1.5rem; font-weight:700; margin-bottom:20px; }
+  .contacto-info p { font-size:0.95rem; color:var(--gris); line-height:1.7; margin-bottom:24px; }
+  .contacto-dato { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+  .contacto-dato-icon { width:44px; height:44px; background:var(--morado-suave); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
+  .contacto-dato-info span { font-size:0.8rem; color:var(--gris); display:block; }
+  .contacto-dato-info strong { color:var(--texto); font-weight:600; font-size:0.95rem; }
+  .contacto-form { background:#fff; padding:40px; border-radius:24px; box-shadow:var(--sombra); border:1px solid rgba(124,58,237,0.08); }
+  .form-group { margin-bottom:20px; }
+  .form-group label { display:block; font-size:0.85rem; font-weight:600; margin-bottom:8px; color:var(--texto); }
+  .form-group input, .form-group textarea, .form-group select { width:100%; padding:12px 16px; border:2px solid rgba(124,58,237,0.12); border-radius:12px; font-family:inherit; font-size:0.9rem; outline:none; transition:border-color .2s; color:var(--texto); background:var(--fondo); }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color:var(--morado); }
+  .form-group textarea { resize:vertical; min-height:110px; }
+  .form-submit { width:100%; background:var(--morado); color:#fff; border:none; padding:15px; border-radius:12px; font-size:1rem; font-weight:600; cursor:pointer; transition:all .2s; }
+  .form-submit:hover { background:var(--morado-oscuro); transform:translateY(-1px); }
+  #form-msg { margin-top:14px; font-size:0.9rem; text-align:center; color:var(--morado); display:none; }
+
+  footer { background:var(--texto); color:rgba(255,255,255,0.7); padding:60px 40px 32px; text-align:center; }
+  footer img { width:64px; height:64px; border-radius:16px; margin-bottom:20px; }
+  footer h3 { font-family:'Lora',serif; font-size:1.6rem; color:#fff; margin-bottom:10px; }
+  footer p { font-size:0.88rem; line-height:1.7; max-width:500px; margin:0 auto 32px; }
+  .footer-links { display:flex; justify-content:center; gap:28px; margin-bottom:36px; flex-wrap:wrap; }
+  .footer-links a { color:rgba(255,255,255,0.6); text-decoration:none; font-size:0.85rem; transition:color .2s; }
+  .footer-links a:hover { color:#fff; }
+  .footer-divider { height:1px; background:rgba(255,255,255,0.1); margin:32px 0; }
+  .footer-bottom { display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:rgba(255,255,255,0.4); flex-wrap:wrap; gap:10px; }
+  .safe-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.07); padding:8px 16px; border-radius:50px; font-size:0.78rem; color:rgba(255,255,255,0.6); border:1px solid rgba(255,255,255,0.1); text-decoration:none; }
+  .safe-badge:hover { background:rgba(255,255,255,0.12); color:#fff; }
+
+  /* Botón flotante WhatsApp */
+  .wa-flotante { position:fixed; bottom:28px; right:28px; z-index:999; width:60px; height:60px; background:var(--verde-wa); border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 24px rgba(37,211,102,0.5); text-decoration:none; transition:all .25s; }
+  .wa-flotante:hover { transform:scale(1.1); box-shadow:0 10px 32px rgba(37,211,102,0.6); }
+  .wa-flotante svg { width:32px; height:32px; fill:#fff; }
+
+  @media(max-width:900px) {
+    .valor-grid,.datos-grid,.wa-cards { grid-template-columns:1fr 1fr; }
+    .precios-grid,.contacto-grid { grid-template-columns:1fr; }
+    nav { padding:14px 20px; }
+    .nav-links { display:none; }
+    section { padding:70px 24px; }
+    .stats { gap:32px; }
+  }
+  @media(max-width:600px) {
+    .valor-grid,.datos-grid,.wa-cards { grid-template-columns:1fr; }
+    .hero { padding:100px 24px 60px; }
+    .hero-btns { flex-direction:column; align-items:center; }
+    .agentes-grid { grid-template-columns:1fr; }
+    .btn-whatsapp { padding:16px 32px; font-size:1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Botón flotante WhatsApp -->
+<a href="https://wa.me/34605519500?text=Hola%20Mari%20Carmen%2C%20he%20visto%20Cuida%20IA%20y%20me%20interesa%20saber%20m%C3%A1s." target="_blank" class="wa-flotante" title="Contactar por WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<nav>
+  <a href="#inicio" class="nav-logo">
+    <img src="logo-cuida-ia.png" alt="Cuida IA">
+    <span>Cuida IA</span>
+  </a>
+  <div class="nav-links">
+    <a href="#agentes">Agentes</a>
+    <a href="#como-funciona">Cómo funciona</a>
+    <a href="#precios">Precios</a>
+    <a href="#contacto-wa">Contacto</a>
+  </div>
+  <a href="https://wa.me/34605519500?text=Hola%20Mari%20Carmen%2C%20he%20visto%20Cuida%20IA%20y%20me%20interesa%20saber%20m%C3%A1s." target="_blank" class="nav-cta">Solicitar piloto gratuito</a>
+</nav>
+
+<section id="inicio" class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">💜 Diseñado desde dentro del sector geriátrico</div>
+    <img src="logo-cuida-ia.png" alt="Cuida IA">
+    <h1>La inteligencia artificial que <em>cuida</em> a quienes cuidan</h1>
+    <p>13 agentes especializados para residencias geriátricas. Menos papel, menos llamadas, menos interrupciones. Más tiempo para lo que importa: las personas.</p>
+    <div class="hero-btns">
+      <a href="https://wa.me/34605519500?text=Hola%20Mari%20Carmen%2C%20he%20visto%20Cuida%20IA%20y%20me%20interesa%20saber%20m%C3%A1s." target="_blank" class="btn-primary">Solicitar piloto gratuito →</a>
+      <a href="#agentes" class="btn-secondary">Ver los agentes</a>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">13</div><div class="stat-label">Agentes especializados</div></div>
+  <div class="stat"><div class="stat-num">5+</div><div class="stat-label">Años de experiencia geriátrica</div></div>
+  <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Disponible siempre</div></div>
+  <div class="stat"><div class="stat-num">0€</div><div class="stat-label">Piloto de 30 días</div></div>
+</div>
+
+<section class="valor">
+  <div class="text-center" style="max-width:700px;margin:0 auto">
+    <div class="section-label">🎯 Por qué Cuida IA</div>
+    <h2 class="section-title">Los problemas reales de las residencias tienen solución real</h2>
+    <p class="section-subtitle">Desarrollado por una gerocultora con más de 5 años en psicogeriatría. No es tecnología por tecnología: es solución a problemas que vivimos cada día.</p>
+  </div>
+  <div class="valor-grid">
+    <div class="valor-card"><div class="valor-icon">🛡️</div><h3>Menos riesgo legal</h3><p>Cada aviso, incidencia y comunicación queda registrado digitalmente. Las auxiliares están protegidas. La residencia, también.</p></div>
+    <div class="valor-card"><div class="valor-icon">💚</div><h3>Equipos menos agotados</h3><p>Eliminamos las interrupciones constantes, el papel que se pierde y las llamadas que se cruzan. El personal puede centrarse en cuidar.</p></div>
+    <div class="valor-card"><div class="valor-icon">👨‍👩‍👧</div><h3>Familias más tranquilas</h3><p>Las familias pueden consultar el estado de su familiar en cualquier momento, sin llamar a recepción. Confianza y transparencia.</p></div>
+  </div>
+</section>
+
+<section id="agentes" class="agentes">
+  <div class="text-center" style="max-width:700px;margin:0 auto 60px">
+    <div class="section-label">🤖 Los agentes</div>
+    <h2 class="section-title">Un agente para cada departamento</h2>
+    <p class="section-subtitle">Cada agente conoce en profundidad su área. Habla el lenguaje del departamento. Se adapta a la residencia.</p>
+  </div>
+  <div class="agentes-grid">
+    <div class="agente-card disponible"><span class="agente-badge badge-disponible">✓ Disponible</span><div class="agente-icon">👨‍👩‍👧</div><h3>Asistente de Familias — Alma</h3><p>Permite a las familias consultar el estado de su familiar en cualquier momento. Responde con datos reales, tono cálido y total confidencialidad.</p></div>
+    <div class="agente-card disponible"><span class="agente-badge badge-disponible">✓ Disponible</span><div class="agente-icon">👩‍⚕️</div><h3>Avisos de Enfermería</h3><p>Las auxiliares registran incidencias al instante. El aviso llega automáticamente a la persona correcta. Sin papel, sin llamadas perdidas.</p></div>
+    <div class="agente-card disponible"><span class="agente-badge badge-disponible">✓ Disponible</span><div class="agente-icon">📋</div><h3>Coordinadora de Auxiliares</h3><p>Gestiona turnos, coberturas y planillas. Detecta huecos antes de que sean un problema. Control justo de horas para todo el equipo.</p></div>
+    <div class="agente-card pronto"><span class="agente-badge badge-pronto">Próximamente</span><div class="agente-icon">🏥</div><h3>Agente de Enfermería</h3><p>Control de medicación, controles programados, citas médicas. Coordinación con el médico.</p></div>
+    <div class="agente-card pronto"><span class="agente-badge badge-pronto">Próximamente</span><div class="agente-icon">🩺</div><h3>Agente Médico</h3><p>Gestión de urgencias, derivaciones hospitalarias e informes médicos. Coordinación fluida entre enfermería y el médico.</p></div>
+    <div class="agente-card pronto"><span class="agente-badge badge-pronto">Próximamente</span><div class="agente-icon">🧠</div><h3>Agente de Psicología</h3><p>Apoyo al trabajo diario de la psicóloga. Intervenciones en crisis, seguimiento de residentes y atención a familias.</p></div>
+    <div class="agente-card pronto"><span class="agente-badge badge-pronto">Próximamente</span><div class="agente-icon">🏃</div><h3>Agente de Fisioterapia</h3><p>Sesiones programadas, rehabilitaciones post-hospitalarias. Gestión de ayudas técnicas.</p></div>
+    <div class="agente-card pronto"><span class="agente-badge badge-pronto">Próximamente</span><div class="agente-icon">🎨</div><h3>Terapia Ocupacional</h3><p>Actividades grupales e individuales. Estimulación sensorial para psicogeriatría.</p></div>
+    <div class="agente-card pronto"><span class="agente-badge badge-pronto">Próximamente</span><div class="agente-icon">🧹</div><h3>Coordinadora de Limpieza</h3><p>Rotación de zonas, control de material, protocolo de emergencia sanitaria.</p></div>
+    <div class="agente-card pronto"><span class="agente-badge badge-pronto">Próximamente</span><div class="agente-icon">💼</div><h3>Trabajo Social</h3><p>Gestión de ingresos, PAIs, tramitación de dependencia. Atención a familias y coordinación externa.</p></div>
+    <div class="agente-card pronto"><span class="agente-badge badge-pronto">Próximamente</span><div class="agente-icon">📊</div><h3>Agente de Dirección</h3><p>Información agregada para la directora sin exponer datos individuales del personal.</p></div>
+    <div class="agente-card pronto"><span class="agente-badge badge-pronto">Próximamente</span><div class="agente-icon">📁</div><h3>Administración</h3><p>Facturación, gestión documental, atención administrativa a familias.</p></div>
+    <div class="agente-card pronto"><span class="agente-badge badge-pronto">Próximamente</span><div class="agente-icon">📞</div><h3>Recepción</h3><p>Atención telefónica, control de accesos, comunicación interna, gestión de visitas.</p></div>
+  </div>
+</section>
+
+<section id="como-funciona" class="como">
+  <div class="text-center" style="max-width:700px;margin:0 auto">
+    <div class="section-label">⚙️ Proceso</div>
+    <h2 class="section-title">Tres pasos para empezar</h2>
+    <p class="section-subtitle">Sin departamento técnico. Sin instalaciones complicadas. Solo necesitáis internet.</p>
+  </div>
+  <div class="pasos">
+    <div class="paso"><div class="paso-num">1</div><div class="paso-texto"><h3>Diagnóstico gratuito</h3><p>Hablamos contigo para entender qué departamentos generan más carga o más riesgo. Te mostramos los agentes más adecuados. Sin compromiso.</p></div></div>
+    <div class="paso"><div class="paso-num">2</div><div class="paso-texto"><h3>Piloto de 30 días</h3><p>Instalamos el agente elegido, formamos al personal en menos de una hora y lo ponemos en marcha. 30 días sin coste, con soporte directo.</p></div></div>
+    <div class="paso"><div class="paso-num">3</div><div class="paso-texto"><h3>Activación y soporte continuo</h3><p>Si el equipo está satisfecho, activamos el servicio. Cuota fija mensual, sin sorpresas. Actualizaciones incluidas.</p></div></div>
+  </div>
+</section>
+
+<section id="precios" class="precios">
+  <div class="text-center" style="max-width:700px;margin:0 auto">
+    <div class="section-label">💰 Precios</div>
+    <h2 class="section-title">Claro, fijo y sin letra pequeña</h2>
+    <p class="section-subtitle">Por agente instalado. Sin costes ocultos. Sin permanencia mínima tras el piloto.</p>
+  </div>
+  <div class="precios-grid">
+    <div class="precio-card">
+      <div class="precio-label">Instalación</div>
+      <div class="precio-num">350€ <span>/ agente</span></div>
+      <p class="precio-desc">Pago único por configuración, integración y formación al personal.</p>
+      <ul class="precio-lista">
+        <li>Configuración completa del agente</li>
+        <li>Adaptación a tu residencia</li>
+        <li>Formación al equipo (1h)</li>
+        <li>Alta en todos los dispositivos</li>
+      </ul>
+    </div>
+    <div class="precio-card destacado">
+      <div class="precio-tag">⭐ Lo más popular</div>
+      <div class="precio-label">Mantenimiento mensual</div>
+      <div class="precio-num">99€ <span>/ mes / agente</span></div>
+      <p class="precio-desc">Soporte continuo, actualizaciones y mejoras incluidas.</p>
+      <ul class="precio-lista">
+        <li>Soporte técnico prioritario</li>
+        <li>Actualizaciones automáticas</li>
+        <li>Mejoras según feedback del equipo</li>
+        <li>Sin permanencia mínima</li>
+      </ul>
+      <a href="https://wa.me/34605519500?text=Hola%20Mari%20Carmen%2C%20quiero%20empezar%20el%20piloto%20gratuito%20de%20Cuida%20IA." target="_blank" class="btn-primary" style="width:100%;text-align:center;display:block">Empezar gratis 30 días →</a>
+    </div>
+  </div>
+  <p style="text-align:center;margin-top:28px;font-size:0.88rem;color:var(--gris)">¿Necesitas varios agentes? Escríbenos para un presupuesto a medida 💜</p>
+</section>
+
+<section class="datos">
+  <div class="text-center" style="max-width:700px;margin:0 auto">
+    <div class="section-label">🔒 Datos y RGPD</div>
+    <h2 class="section-title">Privacidad y protección de datos, por diseño</h2>
+    <p class="section-subtitle">Tu residencia es responsable de los datos. Nosotros somos encargados de tratamiento. Cumplimiento RGPD desde el primer día.</p>
+  </div>
+  <div class="datos-grid">
+    <div class="dato-card"><div style="font-size:2rem">📋</div><h3>Contrato de encargo</h3><p>Firmamos contrato formal de encargado de tratamiento conforme al artículo 28 del RGPD antes de cualquier instalación.</p></div>
+    <div class="dato-card"><div style="font-size:2rem">🛡️</div><h3>Responsable claro</h3><p>La residencia es responsable del tratamiento. Nosotros solo accedemos a lo estrictamente necesario para el servicio.</p></div>
+    <div class="dato-card"><div style="font-size:2rem">🔐</div><h3>Confidencialidad total</h3><p>Los datos de tu residencia nunca se comparten con terceros ni se usan para entrenar modelos de IA externos.</p></div>
+  </div>
+</section>
+
+<!-- SECCIÓN CONTACTO WHATSAPP -->
+<section id="contacto-wa" class="contacto-wa" style="padding:90px 40px">
+  <div class="text-center" style="max-width:700px;margin:0 auto">
+    <div class="section-label">💬 Hablamos</div>
+    <h2 class="section-title">¿Te interesa? Escríbenos directamente</h2>
+    <p class="section-subtitle">Sin formularios, sin esperas. Una conversación real con la persona que ha creado Cuida IA y conoce el sector desde dentro.</p>
+  </div>
+  <div class="wa-cards">
+    <div class="wa-card">
+      <div class="wa-card-icon">⚡</div>
+      <h3>Respuesta rápida</h3>
+      <p>Respondemos en menos de 24 horas. Normalmente mucho antes.</p>
+    </div>
+    <div class="wa-card">
+      <div class="wa-card-icon">🎯</div>
+      <h3>Sin compromiso</h3>
+      <p>Solo una conversación para ver si Cuida IA encaja con vuestra residencia.</p>
+    </div>
+    <div class="wa-card">
+      <div class="wa-card-icon">💜</div>
+      <h3>Trato directo</h3>
+      <p>Hablas con Mari Carmen, gerocultora y creadora del producto. No con un comercial.</p>
+    </div>
+  </div>
+  <div class="wa-cta">
+    <a href="https://wa.me/34605519500?text=Hola%20Mari%20Carmen%2C%20he%20visto%20Cuida%20IA%20y%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20el%20piloto%20gratuito." target="_blank" class="btn-whatsapp">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Escríbenos por WhatsApp
+    </a>
+    <p class="wa-nota">Al pulsar se abrirá WhatsApp con un mensaje predefinido. Puedes editarlo antes de enviarlo.</p>
+  </div>
+</section>
+
+<footer>
+  <img src="logo-cuida-ia.png" alt="Cuida IA">
+  <h3>Cuida IA</h3>
+  <p>Inteligencia artificial especializada en residencias geriátricas. Desarrollada desde dentro del sector, para las personas que lo hacen posible cada día.</p>
+  <div class="footer-links">
+    <a href="#inicio">Inicio</a>
+    <a href="#agentes">Agentes</a>
+    <a href="#precios">Precios</a>
+    <a href="#contacto-wa">Contacto</a>
+  </div>
+  <a href="https://www.safecreative.org/work/2603144929084" target="_blank" class="safe-badge">🔐 Obra registrada · Safe Creative nº 2603144929084</a>
+  <div class="footer-divider"></div>
+  <div class="footer-bottom">
+    <span>© 2026 Cuida IA · Mari Carmen Zamora · Todos los derechos reservados</span>
+    <span>Desarrollado con 💜 desde Parla, Madrid</span>
+  </div>
+</footer>
+
+</body>
+</html>
